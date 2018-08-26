@@ -66,7 +66,7 @@ btGame.makePublisher(a);
 var _url = window.location.href;
 var codeindex = _url.indexOf('code=');
 var stateindex = _url.indexOf('&state');
-
+$("body").css("background","#4799CB"); 
 if(codeindex>0){
     var _code = _url.slice(codeindex+5,stateindex);
     $.ajax({
@@ -146,37 +146,13 @@ if(codeindex>0){
             a.currentLevel = 0;
             a.maxGate = 3;
             a.picPath = "https://static.huanjiaohu.com/image/material";
-            // var d = a.gameMap, e = a.picPath, f = 0;
-            // for (var g in d) {
-            //     f++;
-            //     var h = d[g];
-            //     for (var i = 0, max = h.length; i < max; i++) {
-            //         var j = h[i], k = i + 1 + (f - 1) * 10, l = e + k + ".jpg";
-            //         h[i] = {
-            //             key: k,
-            //             name: j,
-            //             pic: l
-            //         };
-            //         a.gameList.push(h[i]);
-            //     }
-            // }
             a.MODE = {
                 PIC: "picture",
                 NAM: "name"
             };
-            a.playMode = a.MODE.PIC;
+            a.playMode = a.MODE.NAM;
             a.setPlayMode = function(h) {
-                if (typeof h == "number") {
-                    if (h == 0) {
-                        a.playMode = a.MODE.PIC;
-                    } else {
-                        a.playMode = a.MODE.NAM;
-                    }
-                } else if (h == a.MODE.PIC) {
-                    a.playMode = a.MODE.PIC;
-                } else {
-                    a.playMode = a.MODE.NAM;
-                }
+                a.playMode = a.MODE.NAM;
                 a.fire("playModeChange", a.playMode);
             };
             for (var g = 0, max = a.gameList.length; g < max; g++) {
@@ -230,38 +206,17 @@ if(codeindex>0){
 
 ~function(a) {
     var d = $("#start");
-    d.on("click", ".guessPic, .guessNam", function(e) {
-        a.setPlayMode($(this).index() - 1);
-        a.fire("pageChange", 1);
-        a.fire("gameStart");
-        // var _url = window.location.href;
-        // var codeindex = _url.indexOf('code=');
-        // var stateindex = _url.indexOf('&state');
-        // if(codeindex>0){
-        //     var _code = _url.slice(codeindex+5,stateindex);
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: 'https://api.huanjiaohu.com/api/users/login/weixin',
-        //         data: { code: _code },
-        //         dataType: 'json',
-        //         timeout: 5000,
-        //         success: function(data){
-        //                     a.setPlayMode($(this).index() - 1);
-        //                     a.fire("pageChange", 1);
-        //                     a.fire("gameStart");
-        //         },
-        //         error: function(xhr, type){
-        //           alert(type)
-        //         }
-        //       })
-        // }else{
-        //     window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        // }
-        // window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+    d.on("click", ".guessPic", function(e) {
+        // a.setPlayMode($(this).index() - 1);
+        // a.fire("pageChange", 1);
+        // a.fire("gameStart");
+     
+        window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     });
-    // d.find(".moreLink").click(function() {
-    //     $(this).attr("href", btGame.URL.getMoreGame());
-    // });
+    d.on("click", ".guessNam", function(e) {
+        window.location.href='https://group.huanjiaohu.com';
+    });
+
 }(a);
 
 ~function(a) {
@@ -435,6 +390,7 @@ if(codeindex>0){
 ~function(a) {
     var d = $("#end"), e = d.find(".level"), f = d.find(".title");
     d.on("click", ".again", function() {
+        $("body").css("background","#4799CB"); 
         a.fire("pageChange", 0);
         return false;
     }).on("click", ".notify", function() {
@@ -443,28 +399,28 @@ if(codeindex>0){
     });
     var g = [ {
         key: 0,
-        title: "小纯洁"
+        title: "等级1"
     }, {
         key: 5,
-        title: "右手战士"
+        title: "等级2"
     }, {
         key: 10,
-        title: "一卷手纸"
+        title: "等级3"
     }, {
         key: 15,
-        title: "痴汉体质"
+        title: "等级4"
     }, {
         key: 20,
-        title: "变态绅士"
+        title: "等级5"
     }, {
         key: 25,
-        title: "色魔附体"
+        title: "等级6"
     }, {
         key: 29,
-        title: "阅片大湿"
+        title: "等级7"
     }, {
         key: 30,
-        title: "色即是空"
+        title: "等级8"
     } ];
     function h(i) {
         var j = g[0].title;
@@ -488,24 +444,23 @@ if(codeindex>0){
             title: i
         };
         a.fire("gameResult", j);
+        $("body").css("background","#ffffff"); 
     });
-    d.find(".moreLink").click(function() {
-        $(this).attr("href", btGame.URL.getMoreGame());
-    });
+ 
 }(a);
 
 ~function(a, btGame) {
     a.on("gameResult", function(d, e) {
-        var f = "我玩《岛国么么答》获得【" + e.title + "】称号，我很纯洁别怀疑！";
+        var f = "我玩《礁岩海水百科有奖竞猜》获得【" + e.title + "】称号，我只是海水界的小学生！";
         if (e.level >= 5) {
-            f = "我玩《岛国么么答》获得【" + e.title + "】称号，别说你没看过？";
+            f = "我玩《礁岩海水百科有奖竞猜》获得【" + e.title + "】称号，我是不是海水界的大神了？";
         }
         var f = btGame.setShare({
             title: f
         });
-        setTimeout(function() {
-            btGame.playScoreMsg("你认出" + e.level + "个老湿,获得【" + e.title + "】称号，快去刷屏吧！");
-        }, 300);
+        // setTimeout(function() {
+        //     btGame.playScoreMsg("你认出" + e.level + "个老湿,获得【" + e.title + "】称号，快去刷屏吧！");
+        // }, 300);
     });
 }(a, btGame);
 
