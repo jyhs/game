@@ -61,32 +61,13 @@ a.width = 480;
 
 a.height = 760;
 
+a.time=0;
+
+a.timer=null;
+
 btGame.makePublisher(a);
 
-var _url = window.location.href;
-var codeindex = _url.indexOf('code=');
-var stateindex = _url.indexOf('&state');
-$("body").css("background","#4799CB"); 
-if(codeindex>0){
-    var _code = _url.slice(codeindex+5,stateindex);
-    $.ajax({
-        type: 'GET',
-        url: 'https://api.huanjiaohu.com/api/users/login/weixin',
-        data: { code: _code },
-        dataType: 'json',
-        timeout: 5000,
-        success: function(data){
 
-                    a.setPlayMode($(this).index() - 1);
-                    a.fire("pageChange", 1);
-                    a.fire("gameStart");
-
-        },
-        error: function(xhr, type){
-          alert(type)
-        }
-      })
-}
 
 ~function(a) {
     a.load = [];
@@ -150,9 +131,9 @@ if(codeindex>0){
                 PIC: "picture",
                 NAM: "name"
             };
-            a.playMode = a.MODE.NAM;
+            a.playMode = a.MODE.PIC;
             a.setPlayMode = function(h) {
-                a.playMode = a.MODE.NAM;
+                a.playMode = a.MODE.PIC;
                 a.fire("playModeChange", a.playMode);
             };
             for (var g = 0, max = a.gameList.length; g < max; g++) {
@@ -207,11 +188,16 @@ if(codeindex>0){
 ~function(a) {
     var d = $("#start");
     d.on("click", ".guessPic", function(e) {
-        // a.setPlayMode($(this).index() - 1);
-        // a.fire("pageChange", 1);
-        // a.fire("gameStart");
-     
-        window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+        var _url = window.location.href;
+        var codeindex = _url.indexOf('code=');
+        if(codeindex>0){ 
+            a.setPlayMode($(this).index() - 1);
+            a.fire("pageChange", 1);
+            a.fire("gameStart");
+            a.timer=setInterval(function(){a.time+=1},500);
+        }else{
+            window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+        }
     });
     d.on("click", ".guessNam", function(e) {
         window.location.href='https://group.huanjiaohu.com';
@@ -228,7 +214,7 @@ if(codeindex>0){
     });
     a.on("gameStart", function(k) {
         for (var l in a.gameMap) {
-            a.gameMap[l].random();
+        //    a.gameMap[l].random();
         }
         j.reset();
     });
@@ -435,6 +421,7 @@ if(codeindex>0){
     }
     window.c = h;
     a.on("gameEnd", function() {
+        clearInterval(a.timer);
         a.fire("pageChange", 2);
         var i = h(a.currentLevel - 1);
         f.html(i);
@@ -444,7 +431,22 @@ if(codeindex>0){
             title: i
         };
         a.fire("gameResult", j);
-        $("body").css("background","#ffffff"); 
+        $("body").css("background","#ffffff");
+        var user_id = sessionStorage.getItem('user_id');
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/game/finish',
+            data: { 'level': j.level,'title':j.title,'user_id':Number(user_id),'time':a.time },
+            dataType: 'json',
+            timeout: 5000,
+            success: function(data){
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          })
+
+
     });
  
 }(a);
@@ -490,3 +492,32 @@ if(codeindex>0){
         setTimeout(f, 1e3);
     });
 }(a, btGame);
+
+
+~function(a) {
+    var _url = window.location.href;
+    var codeindex = _url.indexOf('code=');
+    var stateindex = _url.indexOf('&state');
+    $("body").css("background","#4799CB"); 
+    if(codeindex>0){  
+        // a.setPlayMode($(this).index() - 1);
+        // a.fire("pageChange", 1);
+        // a.fire("gameStart");
+        var _code = _url.slice(codeindex+5,stateindex);
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/users/login/weixin',
+            data: { code: _code },
+            dataType: 'json',
+            timeout: 5000,
+            success: function(data){
+                sessionStorage.setItem('user_id',data.id);
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          })
+    }
+ 
+}(a);
+
