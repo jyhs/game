@@ -591,3 +591,4 @@ var guanzhuurl ="http://mp.weixin.qq.com/s?__biz=MzI4MjA2MjE0MQ==&mid=246005295&
         document.title = c.desc = c.title;
     };
 }(btGame || (btGame = {}));
+

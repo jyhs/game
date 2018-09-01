@@ -68,6 +68,64 @@ a.timer=null;
 btGame.makePublisher(a);
 
 
+~function(a) {
+   
+    var _url = window.location.href;
+    var codeindex = _url.indexOf('code=');
+    if(codeindex>0){
+        
+    
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/material/random/imageList',
+            dataType: 'json',
+            timeout: 5000,
+            success: function(map){
+               
+                a.gameMap = map;
+                a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
+                a.maxLevel = 30;
+                a.currentLevel = 0;
+                a.maxGate = 3;
+                a.picPath = "https://static.huanjiaohu.com/image/material";
+                a.MODE = {
+                    PIC: "picture",
+                    NAM: "name"
+                };
+                a.playMode = a.MODE.PIC;
+                a.setPlayMode = function(h) {
+                    a.playMode = a.MODE.PIC;
+                    a.fire("playModeChange", a.playMode);
+                };
+
+                
+                for (var g = 0, max = a.gameList.length; g < max; g++) {
+                    var h = a.gameList[g];
+                    if(h){
+                        h.pic = a.picPath+h.pic;
+                        a.load.add({
+                            id: h.key,
+                            src: h.pic
+                        });
+                    }
+                    
+                    if(g==29){
+                        a.setPlayMode($(this).index() - 1);
+                        a.fire("pageChange", 1);
+                        a.fire("gameStart");
+                        a.timer=setInterval(function(){a.time+=1},500);
+                    }
+                }
+               
+                
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          })
+    
+    }
+    }(a);
 
 ~function(a) {
     a.load = [];
@@ -112,49 +170,7 @@ btGame.makePublisher(a);
     });
 }(a);
 
-~function(a) {
 
-    $.ajax({
-        type: 'GET',
-        url: 'https://api.huanjiaohu.com/api/material/random/imageList',
-        dataType: 'json',
-        timeout: 5000,
-        success: function(map){
-            
-            a.gameMap = map;
-            a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
-            a.maxLevel = 30;
-            a.currentLevel = 0;
-            a.maxGate = 3;
-            a.picPath = "https://static.huanjiaohu.com/image/material";
-            a.MODE = {
-                PIC: "picture",
-                NAM: "name"
-            };
-            a.playMode = a.MODE.PIC;
-            a.setPlayMode = function(h) {
-                a.playMode = a.MODE.PIC;
-                a.fire("playModeChange", a.playMode);
-            };
-            for (var g = 0, max = a.gameList.length; g < max; g++) {
-                var h = a.gameList[g];
-                h.pic = a.picPath+h.pic;
-                a.load.add({
-                    id: h.key,
-                    src: h.pic
-                });
-            }
-            a.load.start();
-
-            
-                 
-        },
-        error: function(xhr, type){
-          alert(type)
-        }
-      })
-   
-}(a);
 
 ~function(a) {
     var d = $("#main .page"), e = "hide", f = 200;
@@ -188,19 +204,13 @@ btGame.makePublisher(a);
 ~function(a) {
     var d = $("#start");
     d.on("click", ".guessPic", function(e) {
-        var _url = window.location.href;
-        var codeindex = _url.indexOf('code=');
-        if(codeindex>0){ 
-            a.setPlayMode($(this).index() - 1);
-            a.fire("pageChange", 1);
-            a.fire("gameStart");
-            a.timer=setInterval(function(){a.time+=1},500);
-        }else{
-            window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
-        }
+        window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     });
     d.on("click", ".guessNam", function(e) {
         window.location.href='https://group.huanjiaohu.com';
+    });
+    d.on("click", ".ranking", function(e) {
+        overlay();
     });
 
 }(a);
@@ -385,28 +395,28 @@ btGame.makePublisher(a);
     });
     var g = [ {
         key: 0,
-        title: "等级1"
+        title: "青魔"
     }, {
         key: 5,
-        title: "等级2"
+        title: "西瓜刨"
     }, {
         key: 10,
-        title: "等级3"
+        title: "公子小丑"
     }, {
         key: 15,
-        title: "等级4"
+        title: "粉蓝吊"
     }, {
         key: 20,
-        title: "等级5"
+        title: "金毛巾"
     }, {
         key: 25,
-        title: "等级6"
+        title: "鸡心吊"
     }, {
         key: 29,
-        title: "等级7"
+        title: "眼镜仙"
     }, {
         key: 30,
-        title: "等级8"
+        title: "薄荷仙"
     } ];
     function h(i) {
         var j = g[0].title;
@@ -517,7 +527,30 @@ btGame.makePublisher(a);
               alert(type)
             }
           })
+    }else{
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/game/list',
+            dataType: 'json',
+            timeout: 5000,
+            success: function(datas){
+                var tr = ["<tr><th width='50px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
+                $.each(datas,function (i,data){
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name'><div class='head'><img src='"+data['headimgurl']+"'></div><div>&nbsp;&nbsp;"+data['name']+"</div></div></td><td>"+data['title']+"</td><td>"+data['time']+"</td></tr>";
+                    tr.push(_tr)
+                });
+                $("#ranking").html(tr.join(""));
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          })
     }
  
 }(a);
 
+
+function overlay(){
+    var e1 = document.getElementById('modal-overlay');
+    e1.style.visibility =  (e1.style.visibility == "visible"  ) ? "hidden" : "visible";
+}

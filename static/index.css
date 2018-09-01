@@ -10,7 +10,13 @@ html,body{-webkit-tap-highlight-color:transparent;font-family:Tahoma, "微软雅
 }
 a, a:hover{text-decoration:none;}
 
-#main{width:480px;height:760px;margin:0 auto;overflow:hidden;position:relative;}
+#main{
+	width:480px;
+	height:768px;
+	margin:0 auto;
+	overflow:hidden;
+	position:relative;
+}
 #main .page{position:absolute;overflow:hidden;top:0;width:100%;height:100%;}
 #main .show{left:0;}
 #main .hide{left:-100%;}
@@ -23,8 +29,65 @@ a, a:hover{text-decoration:none;}
 #start .guessNam{margin-left:37px;}
 #start .guessNam{float:left;width:185px;height:64px;}
 
-#start .moreLink{position:absolute;top:630px;left:126px;width:230px;height:150px;}
 
+#start .ranking{position:absolute;top:690px;left:126px;width:230px;height:50px;}
+
+.ranking{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+.ranking table{
+	text-indent:0!important;
+	width:100%;
+	background-color: #ffffff;
+	border-radius: 6px;
+	border-collapse: collapse;
+}
+.ranking  tr{
+	text-align: left;
+	height: 50px;
+}
+.ranking table tr:nth-of-type(odd){
+
+	background: #F7F8F9;
+}
+
+.ranking table .name{
+	display: flex;
+}
+.ranking table  tr:first-child{
+	color: #ff6c00;
+	font-size: 18px;
+}
+
+.ranking table  td:first-child{
+	text-align: center;
+}
+
+.ranking table .head{
+	width: 32px; 
+	height: 32px; 
+	float:left; 
+	border-radius: 50%; 
+	overflow: hidden;
+}
+.ranking td{border:0;padding:0}
+.ranking table img{
+	width:100%
+}
+
+#ranking tr:nth-of-type(2)
+{
+	background: #FFE3d5;
+}
+#ranking tr:nth-of-type(3),
+#ranking tr:nth-of-type(4),
+#ranking tr:nth-of-type(5),
+#ranking tr:nth-of-type(6)
+{
+	background:#FFF5F0!important;
+}
 
 #play .header{height:56px;font-size:30px;text-align:center;color:#ff6c00;}
 #play .wLevel{position:absolute;top:10px;left:15px;}
@@ -65,5 +128,22 @@ a, a:hover{text-decoration:none;}
 #end .again{left:46px;background-position:-182px -330px;}
 #end .notify{right:46px;background-position:0 -330px;}
 #end .smallLink{position:absolute;bottom:0px;width:100%;height:280px;background: url("img_s/small.gif") no-repeat}
-#end .publishLink{position:absolute;bottom:0px;width:100%;height:280px;background: url("img_s/publish.gif") no-repeat}
+#end .publishLink{position:absolute;bottom:0px;width:100%;height:280px;background: url("img_s/publish.png") no-repeat}
 
+#modal-overlay {
+	visibility: hidden;
+	position: absolute;   /* 使用绝对定位或固定定位  */
+	left: 0px;
+	top: 0px;
+	width:100%;
+	text-align:center;
+	z-index: 1000;
+	background-color: rgba(0,0,0,0.4) ;
+}
+/* 模态框样式 */
+.modal-data{
+	width:95%;
+	margin: 100px auto;
+	background-color: #fff;
+	text-align:center;
+}

@@ -21,7 +21,9 @@
         <h1 class="title">礁岩海水么么答</h1>
         <a href="javascript:;" class="guessPic"></a>
         <a href="javascript:;" class="guessNam"></a>
+        <a href="javascript:;" class="ranking"></a>
         <div class="clear"></div>
+
     </div>
     <div id="play" class="page animate hide">
         <div class="header">
@@ -55,7 +57,7 @@
             <a href="javascript:;" class="again">再来一次</a>
             <a href="javascript:;" class="notify">通知好友</a>
         </div>
-        <div class="smallLink" ></div>
+        <div class="publishLink" ></div>
 
     </div>
     
@@ -88,6 +90,17 @@
     <div class="clear"></div>
 </script>
 <!-- END 答案模版 -->
+<div id="modal-overlay">
+        <div class="modal-data">
+                <div class="ranking">
+                        <table id="ranking" border="0">
+                        </table>
+                </div>  
+            <br>
+            <br>
+            <p><a onclick="overlay()" href="">关闭</a></p>
+        </div>
+    </div>
 </body>
 
 <script src="static/index.js?v=1"></script>
