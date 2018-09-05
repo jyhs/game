@@ -4,24 +4,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<title>礁岩海水百科有奖竞猜</title>
+<title>礁岩荣耀</title>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="icon" href="favicon.ico">
 <link type="text/css" href="static/common.css?111" rel="stylesheet" />
-<script type="text/javascript" src="static/zepto.min.js?11"></script>
+<script src="https://cdn.bootcss.com/zepto/1.0.1/zepto.min.js"></script>
 <script src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <script src="static/common.js?122"></script>
 <link type="text/css" href="static/index.css" rel="stylesheet" />
 </head>
 
 <body>
-
 <div id="main">
     <div id="start" class="page animate ">
-        <h1 class="title">礁岩海水么么答</h1>
+        <h1 class="title">礁岩荣耀</h1>
         <a href="javascript:;" class="guessPic"></a>
         <a href="javascript:;" class="guessNam"></a>
         <a href="javascript:;" class="ranking"></a>
+        <a href="javascript:;" class="rule"></a>
+
         <div class="clear"></div>
 
     </div>
@@ -50,14 +51,14 @@
         </div>
     </div>
     <div id="end" class="page animate hide">
-        <p class="really">你获得称号</p>
+        <p class="really">你获得礁岩称号</p>
         <p class="title">牛b</p>
         <p class="level">LV30</p>
         <div>
             <a href="javascript:;" class="again">再来一次</a>
             <a href="javascript:;" class="notify">通知好友</a>
         </div>
-        <div class="publishLink" ></div>
+        <div class="publishLink" ><img src='./static/img_s/publish.png' width='100%'/></div>
 
     </div>
     
@@ -90,19 +91,24 @@
     <div class="clear"></div>
 </script>
 <!-- END 答案模版 -->
-<div id="modal-overlay">
+<div id="ranking-dialog">
         <div class="modal-data">
                 <div class="ranking">
                         <table id="ranking" border="0">
                         </table>
                 </div>  
-            <br>
-            <br>
-            <p><a onclick="overlay()" href="">关闭</a></p>
+            <p><a  class='close' onclick="overlay('ranking-dialog')" href="">关闭</a></p>
         </div>
+</div>
+<div id="rule-dialog">
+    <div class="modal-data">
+            <div class="rule-img">
+            </div>  
+        <p><a class='close' onclick="overlay('rule-dialog')" href="">关闭</a></p>
     </div>
+</div>
 </body>
 
-<script src="static/index.js?v=1"></script>
+<script src="static/index.js?v=2"></script>
 
 </html>

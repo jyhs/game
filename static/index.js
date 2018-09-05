@@ -72,9 +72,9 @@ btGame.makePublisher(a);
    
     var _url = window.location.href;
     var codeindex = _url.indexOf('code=');
-    if(codeindex>0){
-        
-    
+    var stateindex = _url.indexOf('&state');
+    var start = sessionStorage.getItem('start');
+    if(codeindex>0&&start){
         $.ajax({
             type: 'GET',
             url: 'https://api.huanjiaohu.com/api/material/random/imageList',
@@ -110,6 +110,7 @@ btGame.makePublisher(a);
                     }
                     
                     if(g==29){
+                        sessionStorage.removeItem('start');
                         a.setPlayMode($(this).index() - 1);
                         a.fire("pageChange", 1);
                         a.fire("gameStart");
@@ -118,6 +119,20 @@ btGame.makePublisher(a);
                 }
                
                 
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          });
+          var _code = _url.slice(codeindex+5,stateindex);
+          $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/users/login/weixin',
+            data: { code: _code },
+            dataType: 'json',
+            timeout: 5000,
+            success: function(data){
+                sessionStorage.setItem('user_id',data.id);
             },
             error: function(xhr, type){
               alert(type)
@@ -204,13 +219,37 @@ btGame.makePublisher(a);
 ~function(a) {
     var d = $("#start");
     d.on("click", ".guessPic", function(e) {
+        sessionStorage.setItem('start','start');
         window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     });
     d.on("click", ".guessNam", function(e) {
         window.location.href='https://group.huanjiaohu.com';
     });
+    d.on("click", ".rule", function(e) {
+        overlay('rule-dialog');
+        // window.location.href='https://mp.weixin.qq.com/s?__biz=MzA5ODkxNDY0NQ==&mid=2652596376&idx=1&sn=fe239f02f81c46bd2df74556df8eab84&chksm=8b6590a2bc1219b498ba438e3cec906de10d84a5db22c9c90172310ad20245000781ed371e25&token=237286370&lang=zh_CN#rd';
+    });
     d.on("click", ".ranking", function(e) {
-        overlay();
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.huanjiaohu.com/api/game/list',
+            dataType: 'json',
+            timeout: 5000,
+            success: function(datas){
+                var tr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
+                $.each(datas,function (i,data){
+                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
+
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/2+"</td></tr>";
+                    tr.push(_tr)
+                });
+                $("#ranking").html(tr.join(""));
+                overlay('ranking-dialog');
+            },
+            error: function(xhr, type){
+              alert(type)
+            }
+          })
     });
 
 }(a);
@@ -388,7 +427,7 @@ btGame.makePublisher(a);
     d.on("click", ".again", function() {
         $("body").css("background","#4799CB"); 
         a.fire("pageChange", 0);
-        return false;
+        return true;
     }).on("click", ".notify", function() {
         btGame.playShareTip();
         return false;
@@ -463,9 +502,9 @@ btGame.makePublisher(a);
 
 ~function(a, btGame) {
     a.on("gameResult", function(d, e) {
-        var f = "我玩《礁岩海水百科有奖竞猜》获得【" + e.title + "】称号，我只是海水界的小学生！";
+        var f = "我玩《礁岩荣耀》获得【" + e.title + "】称号，还不测试一下你的称号？";
         if (e.level >= 5) {
-            f = "我玩《礁岩海水百科有奖竞猜》获得【" + e.title + "】称号，我是不是海水界的大神了？";
+            f = "我玩《礁岩荣耀》获得【" + e.title + "】称号，还不测试一下你的称号？";
         }
         var f = btGame.setShare({
             title: f
@@ -505,52 +544,11 @@ btGame.makePublisher(a);
 
 
 ~function(a) {
-    var _url = window.location.href;
-    var codeindex = _url.indexOf('code=');
-    var stateindex = _url.indexOf('&state');
-    $("body").css("background","#4799CB"); 
-    if(codeindex>0){  
-        // a.setPlayMode($(this).index() - 1);
-        // a.fire("pageChange", 1);
-        // a.fire("gameStart");
-        var _code = _url.slice(codeindex+5,stateindex);
-        $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/users/login/weixin',
-            data: { code: _code },
-            dataType: 'json',
-            timeout: 5000,
-            success: function(data){
-                sessionStorage.setItem('user_id',data.id);
-            },
-            error: function(xhr, type){
-              alert(type)
-            }
-          })
-    }else{
-        $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/game/list',
-            dataType: 'json',
-            timeout: 5000,
-            success: function(datas){
-                var tr = ["<tr><th width='50px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
-                $.each(datas,function (i,data){
-                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name'><div class='head'><img src='"+data['headimgurl']+"'></div><div>&nbsp;&nbsp;"+data['name']+"</div></div></td><td>"+data['title']+"</td><td>"+data['time']+"</td></tr>";
-                    tr.push(_tr)
-                });
-                $("#ranking").html(tr.join(""));
-            },
-            error: function(xhr, type){
-              alert(type)
-            }
-          })
-    }
- 
+    $("body").css("background","#4799CB");
 }(a);
 
 
-function overlay(){
-    var e1 = document.getElementById('modal-overlay');
+function overlay(id){
+    var e1 = document.getElementById(id);
     e1.style.visibility =  (e1.style.visibility == "visible"  ) ? "hidden" : "visible";
 }

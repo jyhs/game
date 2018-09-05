@@ -28,14 +28,14 @@ a, a:hover{text-decoration:none;}
 #start .guessPic{margin-right:40px;}
 #start .guessNam{margin-left:37px;}
 #start .guessNam{float:left;width:185px;height:64px;}
-
-
 #start .ranking{position:absolute;top:690px;left:126px;width:230px;height:50px;}
+#start .rule{position:absolute;top:20px;right:0;width:170px;height:45px;}
 
 .ranking{
 	display: flex;
 	justify-content: center;
 	width: 100%;
+	table-layout: fixed;
 }
 .ranking table{
 	text-indent:0!important;
@@ -48,13 +48,16 @@ a, a:hover{text-decoration:none;}
 	text-align: left;
 	height: 50px;
 }
-.ranking table tr:nth-of-type(odd){
 
+.ranking table tr:nth-of-type(odd){
 	background: #F7F8F9;
 }
 
 .ranking table .name{
 	display: flex;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
 }
 .ranking table  tr:first-child{
 	color: #ff6c00;
@@ -94,7 +97,7 @@ a, a:hover{text-decoration:none;}
 #play .time{display:inline-block;width:46px;height:40px;line-height:40px;margin-top:8px;text-align:center;color:#ff6c00;}
 #play .heartList{position:absolute;right:11px;top:13px;}
 #play .heart{float:left;width:36px;height:31px;margin:0 4px;background:url("img_d/image.png") no-repeat 0 0;}
-#play .logo{position:absolute;left:120px;bottom:20px;width:240px;height:30px;background:url("img_s/start.jpg") no-repeat -120px -700px;}
+#play .logo{position:absolute;left:160px;bottom:20px;width:240px;height:35px;background:url("img_s/logo.png") no-repeat;}
 
 .gameTip{padding:20px 0;font-size:36px;color:#fff;}
 .gameTip img{width:75%}
@@ -128,9 +131,9 @@ a, a:hover{text-decoration:none;}
 #end .again{left:46px;background-position:-182px -330px;}
 #end .notify{right:46px;background-position:0 -330px;}
 #end .smallLink{position:absolute;bottom:0px;width:100%;height:280px;background: url("img_s/small.gif") no-repeat}
-#end .publishLink{position:absolute;bottom:0px;width:100%;height:280px;background: url("img_s/publish.png") no-repeat}
+#end .publishLink{position:absolute;bottom:0px;width:100%;height:280px;}
 
-#modal-overlay {
+#ranking-dialog,#rule-dialog {
 	visibility: hidden;
 	position: absolute;   /* 使用绝对定位或固定定位  */
 	left: 0px;
@@ -146,4 +149,19 @@ a, a:hover{text-decoration:none;}
 	margin: 100px auto;
 	background-color: #fff;
 	text-align:center;
+}
+
+.rule-img{
+	background: url(./img_s/rule.jpg) no-repeat;
+    width: 100%;
+    height: 590px;
+    background-size: cover;
+}
+
+.close{
+	line-height: 42px;
+    height: 42px;
+	display: block;
+	color:white;
+    background-color: #44bb44;
 }

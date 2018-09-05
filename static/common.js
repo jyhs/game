@@ -509,13 +509,13 @@ var btGame;
 var btGame;
 var mebtnopenurl = 'https://game.huanjiaohu.com';
 var thegameurl =""; 
-var guanzhuurl ="http://mp.weixin.qq.com/s?__biz=MzI4MjA2MjE0MQ==&mid=246005295&idx=1&sn=490f8141976d607ba079d48f52a3fcd7#rd";
+var guanzhuurl ="http://mp.weixin.qq.com";
 ~function(bt) {
     var b = 0;
     var c = {
         width: "66",
-        src: bt.getGamePath() + "icon.png",
-        url: location.href,
+        src: 'https://game.huanjiaohu.com/1.jpg',
+        url: mebtnopenurl,
         title: document.title,
         desc: document.title,
         callback: function() {
