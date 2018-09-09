@@ -114,7 +114,7 @@ btGame.makePublisher(a);
                         a.setPlayMode($(this).index() - 1);
                         a.fire("pageChange", 1);
                         a.fire("gameStart");
-                        a.timer=setInterval(function(){a.time+=1},500);
+                        a.timer=setInterval(function(){a.time+=1},100);
                     }
                 }
                
@@ -240,7 +240,7 @@ btGame.makePublisher(a);
                 $.each(datas,function (i,data){
                     var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
 
-                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/2+"</td></tr>";
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
                     tr.push(_tr)
                 });
                 $("#ranking").html(tr.join(""));
