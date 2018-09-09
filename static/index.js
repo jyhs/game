@@ -545,6 +545,13 @@ btGame.makePublisher(a);
 
 ~function(a) {
     $("body").css("background","#4799CB");
+    wx.miniProgram.postMessage({
+        data: {
+            'param': 'type=game',
+            'title': '礁岩荣耀',
+            'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
+        }
+    });
 }(a);
 
 
