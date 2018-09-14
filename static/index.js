@@ -494,8 +494,14 @@ btGame.makePublisher(a);
               alert(type)
             }
           })
-
-
+        wx.miniProgram.postMessage({
+            data: {
+                'param': 'type=game',
+                "shareUserId":user_id,
+                'title': document.title,
+                'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
+            }
+        });
     });
  
 }(a);
@@ -548,6 +554,7 @@ btGame.makePublisher(a);
     wx.miniProgram.postMessage({
         data: {
             'param': 'type=game',
+            "shareUserId":null,
             'title': '礁岩荣耀',
             'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
         }
