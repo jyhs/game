@@ -34,8 +34,6 @@
             <span class="time">10</span>
             <div class="heartList">
                 <em class="heart"></em>
-                <em class="heart"></em>
-                <em class="heart"></em>
             </div>
         </div>
         <div class="clear"></div>
@@ -93,10 +91,39 @@
 <!-- END 答案模版 -->
 <div id="ranking-dialog">
         <div class="modal-data">
-                <div class="ranking">
-                        <table id="ranking" border="0">
-                        </table>
-                </div>  
+               
+                <div class="widget">
+                    <ol class="widget-list" id="managers">
+                        <div class="ranking">
+                            <table id="totleranking" border="0">
+                            </table>
+                        </div>
+                    </ol>
+                  
+                    <ol class="widget-list" id="designers">
+                        <div class="ranking">
+                            <table id="monthranking" border="0">
+                            </table>
+                        </div>
+                    </ol>
+                  
+                    <ol class="widget-list" id="developers">
+                        <div class="ranking">
+                            <table id="weekranking" border="0">
+                            </table>
+                        </div>
+                    </ol>
+                  
+                    <ul class="widget-tabs">
+                      <li class="widget-tab">
+                        <a href="#managers" class="widget-tab-link">总排行榜</a>
+                      </li><li class="widget-tab">
+                        <a href="#designers" class="widget-tab-link">月排行榜</a>
+                      </li><li class="widget-tab">
+                        <a href="#developers" class="widget-tab-link">周排行榜</a>
+                    </li>
+                   </ul>
+                  </div>  
             <p><a  class='close' onclick="overlay('ranking-dialog')" href="">关闭</a></p>
         </div>
 </div>

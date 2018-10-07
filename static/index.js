@@ -81,7 +81,7 @@ btGame.makePublisher(a);
             dataType: 'json',
             timeout: 5000,
             success: function(map){
-               
+
                 a.gameMap = map;
                 a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
                 a.maxLevel = 30;
@@ -135,7 +135,7 @@ btGame.makePublisher(a);
                 sessionStorage.setItem('user_id',data.id);
             },
             error: function(xhr, type){
-              alert(type)
+              //alert(type)
             }
           })
     
@@ -227,7 +227,6 @@ btGame.makePublisher(a);
     });
     d.on("click", ".rule", function(e) {
         overlay('rule-dialog');
-        // window.location.href='https://mp.weixin.qq.com/s?__biz=MzA5ODkxNDY0NQ==&mid=2652596376&idx=1&sn=fe239f02f81c46bd2df74556df8eab84&chksm=8b6590a2bc1219b498ba438e3cec906de10d84a5db22c9c90172310ad20245000781ed371e25&token=237286370&lang=zh_CN#rd';
     });
     d.on("click", ".ranking", function(e) {
         $.ajax({
@@ -236,14 +235,33 @@ btGame.makePublisher(a);
             dataType: 'json',
             timeout: 5000,
             success: function(datas){
-                var tr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
-                $.each(datas,function (i,data){
-                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
+                var week = datas.week;
+                var month = datas.month;
+                var totle = datas.totle;
 
+                var weektr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
+                var monthtr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
+                var totletr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
+
+                $.each(week,function (i,data){
+                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
                     var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
-                    tr.push(_tr)
+                    weektr.push(_tr)
                 });
-                $("#ranking").html(tr.join(""));
+                $.each(month,function (i,data){
+                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
+                    monthtr.push(_tr)
+                });
+                $.each(totle,function (i,data){
+                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
+                    totletr.push(_tr)
+                });
+                $("#weekranking").html(weektr.join(""));
+                $("#monthranking").html(monthtr.join(""));
+                $("#totleranking").html(totletr.join(""));
+
                 overlay('ranking-dialog');
             },
             error: function(xhr, type){
@@ -263,14 +281,42 @@ btGame.makePublisher(a);
     });
     a.on("gameStart", function(k) {
         for (var l in a.gameMap) {
-        //    a.gameMap[l].random();
+           a.gameMap[l].random();
         }
-        j.reset();
+        var user_id = sessionStorage.getItem('user_id');
+        if(!user_id){
+            j.reset(1);
+        }else{
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth()+1;
+            if(month<10)month='0'+month;
+            var day = today.getDate();
+            if(day<10)day='0'+day;
+            var date = year+''+month+''+day;
+            $.ajax({
+                type: 'POST',
+                url: 'https://api.huanjiaohu.com/api/tools/share/select',
+                data: {'param':'type=game','user_id':Number(user_id),'date':date },
+                dataType: 'json',
+                timeout: 5000,
+                success: function(data){
+                    if(data&&data.length>0){
+                        j.reset(3);
+                    }else{
+                        j.reset(1);
+                    }
+                },
+                error: function(xhr, type){
+                  alert(type)
+                }
+              })
+        }
     });
     var j = {
-        reset: function() {
+        reset: function(heart) {
             a.currentLevel = 0;
-            a.maxWrongCount = 3;
+            a.maxWrongCount = heart;
             a.wrongCount = 0;
             this.next(false);
             var k = 3, l = this;
@@ -283,7 +329,7 @@ btGame.makePublisher(a);
                 a.fire("playPrepare", k);
             }, 1e3);
             a.fire("playPrepare", k);
-            this.heart(3);
+            this.heart(heart);
         },
         next: function(k) {
             var l = ++a.currentLevel;
