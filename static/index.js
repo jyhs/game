@@ -74,7 +74,7 @@ btGame.makePublisher(a);
     var codeindex = _url.indexOf('code=');
     var stateindex = _url.indexOf('&state');
     var start = sessionStorage.getItem('start');
-    if(true){
+    if(codeindex>0&&start){
         $.ajax({
             type: 'GET',
             url: 'https://api.huanjiaohu.com/api/material/random/imageList',
