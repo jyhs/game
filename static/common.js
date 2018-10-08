@@ -243,7 +243,7 @@ var btGame;
         if (d > 0 && !b) {
             b = $(btGame.getNewDiv());
             b.addClass("bt-game-loading");
-            b.html('<table><tr><td><img class="bt-img" src="resource/preloadImage.png" /><div class="bt-text"></div></td></tr></table>');
+            b.html('<table><tr><td><img class="bt-img" src="static/img_d/preloadImage.png" /><div class="bt-text"></div></td></tr></table>');
             bt.getDomBody().appendChild(b[0]);
             c = b.find(".bt-text");
         }
@@ -424,7 +424,7 @@ var btGame;
         getScreenOption: function() {
             return {
                 id: "bt-h-scrren",
-                html: "<table><tr><td><img class='bt-h-screen-img' src='resource//bt-play-h-screen.png' /></td></tr></table>",
+                html: "<table><tr><td><img class='bt-h-screen-img' src='static/img_d/bt-play-h-screen.png' /></td></tr></table>",
                 time: 0,
                 lockId: "bt-hide-lock"
             };
@@ -450,7 +450,7 @@ var btGame;
         getScreenOption: function() {
             return {
                 id: "bt-v-scrren",
-                html: "<table><tr><td><img class='bt-v-screen-img' src='resource/bt-play-v-screen.png' /></td></tr></table>",
+                html: "<table><tr><td><img class='bt-v-screen-img' src='static/img_d/bt-play-v-screen.png' /></td></tr></table>",
                 time: 0,
                 lockId: "bt-hide-lock"
             };
@@ -479,7 +479,7 @@ var btGame;
     function tip() {
         var c = bt.advertisement({
             id: b,
-            html: "<img class='bt-play-share-tip-img' src='resource/bt-play-share-tip.png' />",
+            html: "<img class='bt-play-share-tip-img' src='static/img_d/bt-play-share-tip.png' />",
             time: 0
         });
         c.show();
