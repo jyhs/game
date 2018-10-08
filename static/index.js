@@ -74,7 +74,7 @@ btGame.makePublisher(a);
     var codeindex = _url.indexOf('code=');
     var stateindex = _url.indexOf('&state');
     var start = sessionStorage.getItem('start');
-    if(codeindex>0&&start){
+    if(true){
         $.ajax({
             type: 'GET',
             url: 'https://api.huanjiaohu.com/api/material/random/imageList',
@@ -475,8 +475,16 @@ btGame.makePublisher(a);
         a.fire("pageChange", 0);
         return true;
     }).on("click", ".notify", function() {
-        btGame.playShareTip();
-        return false;
+        $("body").css("background","#4799CB"); 
+        sessionStorage.removeItem('start');
+        a.setPlayMode($(this).index() - 1);
+        a.fire("pageChange", 1);
+        a.fire("gameStart");
+        a.timer=setInterval(function(){a.time+=1},100);
+        return true;
+    }).on("click", ".publishLink", function() {
+         btGame.playShareTip();
+         return false;
     });
     var g = [ {
         key: 0,
