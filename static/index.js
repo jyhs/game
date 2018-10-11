@@ -75,55 +75,7 @@ btGame.makePublisher(a);
     var stateindex = _url.indexOf('&state');
     var start = sessionStorage.getItem('start');
     if(codeindex>0&&start){
-        $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/material/random/imageList',
-            dataType: 'json',
-            timeout: 5000,
-            success: function(map){
-
-                a.gameMap = map;
-                a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
-                a.maxLevel = 30;
-                a.currentLevel = 0;
-                a.maxGate = 3;
-                a.picPath = "https://static.huanjiaohu.com/image/material";
-                a.MODE = {
-                    PIC: "picture",
-                    NAM: "name"
-                };
-                a.playMode = a.MODE.PIC;
-                a.setPlayMode = function(h) {
-                    a.playMode = a.MODE.PIC;
-                    a.fire("playModeChange", a.playMode);
-                };
-
-                
-                for (var g = 0, max = a.gameList.length; g < max; g++) {
-                    var h = a.gameList[g];
-                    if(h){
-                        h.pic = a.picPath+h.pic;
-                        a.load.add({
-                            id: h.key,
-                            src: h.pic
-                        });
-                    }
-                    
-                    if(g==29){
-                        sessionStorage.removeItem('start');
-                        a.setPlayMode($(this).index() - 1);
-                        a.fire("pageChange", 1);
-                        a.fire("gameStart");
-                        a.timer=setInterval(function(){a.time+=1},100);
-                    }
-                }
-               
-                
-            },
-            error: function(xhr, type){
-              alert(type)
-            }
-          });
+          startGame();
           var _code = _url.slice(codeindex+5,stateindex);
           $.ajax({
             type: 'GET',
@@ -135,7 +87,7 @@ btGame.makePublisher(a);
                 sessionStorage.setItem('user_id',data.id);
             },
             error: function(xhr, type){
-              //alert(type)
+              //console.log(type)
             }
           })
     
@@ -265,7 +217,7 @@ btGame.makePublisher(a);
                 overlay('ranking-dialog');
             },
             error: function(xhr, type){
-              alert(type)
+              console.log(type)
             }
           })
     });
@@ -308,7 +260,7 @@ btGame.makePublisher(a);
                     }
                 },
                 error: function(xhr, type){
-                  alert(type)
+                  console.log(type)
                 }
               })
         }
@@ -476,11 +428,7 @@ btGame.makePublisher(a);
         return true;
     }).on("click", ".notify", function() {
         $("body").css("background","#4799CB"); 
-        sessionStorage.removeItem('start');
-        a.setPlayMode($(this).index() - 1);
-        a.fire("pageChange", 1);
-        a.fire("gameStart");
-        a.timer=setInterval(function(){a.time+=1},100);
+        startGame();
         return true;
     }).on("click", ".publishLink", function() {
          btGame.playShareTip();
@@ -545,7 +493,7 @@ btGame.makePublisher(a);
             success: function(data){
             },
             error: function(xhr, type){
-              alert(type)
+              console.log(type)
             }
           })
         wx.miniProgram.postMessage({
@@ -619,4 +567,55 @@ btGame.makePublisher(a);
 function overlay(id){
     var e1 = document.getElementById(id);
     e1.style.visibility =  (e1.style.visibility == "visible"  ) ? "hidden" : "visible";
+}
+function startGame(){
+    $.ajax({
+        type: 'GET',
+        url: 'https://api.huanjiaohu.com/api/material/random/imageList',
+        dataType: 'json',
+        timeout: 5000,
+        success: function(map){
+
+            a.gameMap = map;
+            a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
+            a.maxLevel = 30;
+            a.currentLevel = 0;
+            a.maxGate = 3;
+            a.picPath = "https://static.huanjiaohu.com/image/material";
+            a.MODE = {
+                PIC: "picture",
+                NAM: "name"
+            };
+            a.playMode = a.MODE.PIC;
+            a.setPlayMode = function(h) {
+                a.playMode = a.MODE.PIC;
+                a.fire("playModeChange", a.playMode);
+            };
+
+            
+            for (var g = 0, max = a.gameList.length; g < max; g++) {
+                var h = a.gameList[g];
+                if(h){
+                    h.pic = a.picPath+h.pic;
+                    a.load.add({
+                        id: h.key,
+                        src: h.pic
+                    });
+                }
+                
+                if(g==29){
+                    sessionStorage.removeItem('start');
+                    a.setPlayMode($(this).index() - 1);
+                    a.fire("pageChange", 1);
+                    a.fire("gameStart");
+                    a.timer=setInterval(function(){a.time+=1},100);
+                }
+            }
+           
+            
+        },
+        error: function(xhr, type){
+          console.log(type)
+        }
+      });
 }
