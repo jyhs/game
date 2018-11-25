@@ -74,17 +74,20 @@ btGame.makePublisher(a);
     var codeindex = _url.indexOf('code=');
     var stateindex = _url.indexOf('&state');
     var start = sessionStorage.getItem('start');
+
     if(codeindex>0&&start){
-          startGame();
+         
           var _code = _url.slice(codeindex+5,stateindex);
           $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/users/login/weixin',
+            type: 'POST',
+            url: 'https://api2.huanjiaohu.com/user/loginByCode',
             data: { code: _code },
             dataType: 'json',
             timeout: 5000,
-            success: function(data){
-                sessionStorage.setItem('user_id',data.id);
+            success: function(user){
+                sessionStorage.setItem('user_id',user.id);
+                sessionStorage.setItem('Authorization',user.token);
+                startGame();
             },
             error: function(xhr, type){
               //console.log(type)
@@ -182,19 +185,24 @@ btGame.makePublisher(a);
     });
     d.on("click", ".ranking", function(e) {
         $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/game/list',
+            type: 'POST',
+            url: 'https://api2.huanjiaohu.com/game/list',
             dataType: 'json',
             timeout: 5000,
             success: function(datas){
                 var week = datas.week;
                 var month = datas.month;
-                var totle = datas.totle;
+                var day = datas.day;
 
+                var daytr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
                 var weektr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
                 var monthtr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
-                var totletr = ["<tr><th width='55px' style='text-align:center'>排名</th><th>用户名</th><th width='70px'>称号</th><th width='50px'>用时</th></tr>"];
 
+                $.each(day,function (i,data){
+                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
+                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
+                    daytr.push(_tr)
+                });
                 $.each(week,function (i,data){
                     var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
                     var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
@@ -205,14 +213,10 @@ btGame.makePublisher(a);
                     var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
                     monthtr.push(_tr)
                 });
-                $.each(totle,function (i,data){
-                    var name = data['name'].length<=8?data['name']:data['name'].substring(0,8)+'...';
-                    var _tr = "<tr><td>"+(i+1)+"</td><td><div class='name' width='70px'><div class='head'><img src='"+data['headimgurl']+"'></div><div style='padding-top:5px;'>&nbsp;&nbsp;"+name+"</div></div></td><td>"+data['title']+"</td><td>"+Number(data['time'])/10+"</td></tr>";
-                    totletr.push(_tr)
-                });
+               
+                $("#dayranking").html(daytr.join(""));
                 $("#weekranking").html(weektr.join(""));
                 $("#monthranking").html(monthtr.join(""));
-                $("#totleranking").html(totletr.join(""));
 
                 overlay('ranking-dialog');
             },
@@ -245,11 +249,15 @@ btGame.makePublisher(a);
             if(month<10)month='0'+month;
             var day = today.getDate();
             if(day<10)day='0'+day;
-            var date = year+''+month+''+day;
+            var date = year+'-'+month+'-'+day;
             $.ajax({
                 type: 'POST',
-                url: 'https://api.huanjiaohu.com/api/tools/share/select',
-                data: {'param':'type=game','user_id':Number(user_id),'date':date },
+                url: 'https://api2.huanjiaohu.com/share/select',
+                beforeSend: function(request) {
+                    const auth = sessionStorage.getItem('Authorization');
+                    request.setRequestHeader("Authorization",auth);
+                },
+                data: {'param':'type=game','userId':Number(37),'date':date ,'delete':true},
                 dataType: 'json',
                 timeout: 5000,
                 success: function(data){
@@ -484,10 +492,14 @@ btGame.makePublisher(a);
         a.fire("gameResult", j);
         $("body").css("background","#ffffff");
         var user_id = sessionStorage.getItem('user_id');
+        var auth = sessionStorage.getItem('Authorization');
         $.ajax({
-            type: 'GET',
-            url: 'https://api.huanjiaohu.com/api/game/finish',
-            data: { 'level': j.level,'title':j.title,'user_id':Number(user_id),'time':a.time },
+            type: 'POST',
+            url: 'https://api2.huanjiaohu.com/game/over',
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization",auth);
+            },
+            data: { 'level': j.level,'title':j.title,'userId':Number(37),'time':a.time },
             dataType: 'json',
             timeout: 5000,
             success: function(data){
@@ -500,6 +512,7 @@ btGame.makePublisher(a);
             data: {
                 'param': 'type=game',
                 "shareUserId":user_id,
+                'auth':auth,
                 'title': document.title,
                 'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
             }
@@ -558,7 +571,7 @@ btGame.makePublisher(a);
             'param': 'type=game',
             "shareUserId":null,
             'title': '礁岩荣耀',
-            'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
+            'imageUrl': 'https://static.huanjiaohu.com/share/game.jpg?r='+Math.random()
         }
     });
 }(a);
@@ -570,14 +583,18 @@ function overlay(id){
 }
 function startGame(){
     $.ajax({
-        type: 'GET',
-        url: 'https://api.huanjiaohu.com/api/material/random/imageList',
+        type: 'POST',
+        url: 'https://api2.huanjiaohu.com/api/material/randomImageList',
         dataType: 'json',
         timeout: 5000,
-        success: function(map){
+        success: function(list){
 
-            a.gameMap = map;
-            a.gameList = map['1'].concat(map['2']).concat(map['3']).concat(map['4']);
+            a.gameMap = {
+                '1':list.slice(0,10),
+                '2':list.slice(10,20),
+                '3':list.slice(20,30)
+            }
+            a.gameList = list;
             a.maxLevel = 30;
             a.currentLevel = 0;
             a.maxGate = 3;
