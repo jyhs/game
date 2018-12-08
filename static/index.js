@@ -80,7 +80,7 @@ btGame.makePublisher(a);
           var _code = _url.slice(codeindex+5,stateindex);
           $.ajax({
             type: 'POST',
-            url: 'https://api2.huanjiaohu.com/user/loginByCode',
+            url: 'https://api.huanjiaohu.com/user/loginByCode',
             data: { code: _code },
             dataType: 'json',
             timeout: 5000,
@@ -186,7 +186,7 @@ btGame.makePublisher(a);
     d.on("click", ".ranking", function(e) {
         $.ajax({
             type: 'POST',
-            url: 'https://api2.huanjiaohu.com/game/list',
+            url: 'https://api.huanjiaohu.com/game/list',
             dataType: 'json',
             timeout: 5000,
             success: function(datas){
@@ -252,7 +252,7 @@ btGame.makePublisher(a);
             var date = year+'-'+month+'-'+day;
             $.ajax({
                 type: 'POST',
-                url: 'https://api2.huanjiaohu.com/share/select',
+                url: 'https://api.huanjiaohu.com/share/select',
                 beforeSend: function(request) {
                     const auth = sessionStorage.getItem('Authorization');
                     request.setRequestHeader("Authorization",auth);
@@ -495,7 +495,7 @@ btGame.makePublisher(a);
         var auth = sessionStorage.getItem('Authorization');
         $.ajax({
             type: 'POST',
-            url: 'https://api2.huanjiaohu.com/game/over',
+            url: 'https://api.huanjiaohu.com/game/over',
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization",auth);
             },
@@ -584,7 +584,7 @@ function overlay(id){
 function startGame(){
     $.ajax({
         type: 'POST',
-        url: 'https://api2.huanjiaohu.com/api/material/randomImageList',
+        url: 'https://api.huanjiaohu.com/api/material/randomImageList',
         dataType: 'json',
         timeout: 5000,
         success: function(list){
