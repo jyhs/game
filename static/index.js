@@ -257,7 +257,7 @@ btGame.makePublisher(a);
                     const auth = sessionStorage.getItem('Authorization');
                     request.setRequestHeader("Authorization",auth);
                 },
-                data: {'param':'type=game','userId':Number(37),'date':date ,'delete':true},
+                data: {'param':'type=game','userId':Number(user_id),'date':date ,'delete':true},
                 dataType: 'json',
                 timeout: 5000,
                 success: function(data){
