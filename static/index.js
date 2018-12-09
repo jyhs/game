@@ -571,7 +571,7 @@ btGame.makePublisher(a);
             'param': 'type=game',
             "shareUserId":null,
             'title': '礁岩荣耀',
-            'imageUrl': 'https://static.huanjiaohu.com/share/game.jpg?r='+Math.random()
+            'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
         }
     });
 }(a);
