@@ -74,9 +74,7 @@ btGame.makePublisher(a);
     var codeindex = _url.indexOf('code=');
     var stateindex = _url.indexOf('&state');
     var start = sessionStorage.getItem('start');
-
     if(codeindex>0&&start){
-         
           var _code = _url.slice(codeindex+5,stateindex);
           $.ajax({
             type: 'POST',
