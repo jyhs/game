@@ -136,8 +136,28 @@
         <p><a class='close' onclick="overlay('rule-dialog')" href="">关闭</a></p>
     </div>
 </div>
+<div id="login-dialog">
+    <div class="modal-data">
+            <div class="wrap" id="wrap">
+                    <div class="logGet">
+                            <div class="logD logDtip">
+                                <p class="p1">登录</p>
+                            </div>
+                            <div class="lgD">
+                                <img src="https://static.huanjiaohu.com/icon/phone.png" width="20" height="20" alt=""/>
+                                <input id='phone' type="number" placeholder="输入手机号" />
+                            </div>
+                            <div class="lgD" style='margin-bottom: 22px'>
+                                <img src="https://static.huanjiaohu.com/icon/validate.png" width="20" height="20" alt=""/>
+                                <input id='validateCode' type="number" placeholder="输入短信验证码" />
+                                <input id='validate' type="button" value="获取验证码" style="text-indent: inherit;position: absolute;top: 10px;right: 0px;width: 100px;height: 30px;background-color: #44bb44;border: 0;border-radius: 15px;color: #fff;">
+                            </div>
+                        </div>
+        <p><a id='loginOkBtn' class='close'  style="background-color:#e9e9e9">确定</a></p>
+    </div>
+</div>
 </body>
 
-<script src="static/index.js?v=4"></script>
+<script src="static/index.js?v=7"></script>
 
 </html>

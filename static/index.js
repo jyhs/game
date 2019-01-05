@@ -69,7 +69,6 @@ btGame.makePublisher(a);
 
 
 ~function(a) {
-   
     var _url = window.location.href;
     var codeindex = _url.indexOf('code=');
     var stateindex = _url.indexOf('&state');
@@ -85,7 +84,27 @@ btGame.makePublisher(a);
             success: function(user){
                 sessionStorage.setItem('user_id',user.id);
                 sessionStorage.setItem('Authorization',user.token);
-                startGame();
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://api.huanjiaohu.com/user/checkPhone',
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Authorization",user.token);
+                    },
+                    data: {},
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function(data){
+                       if(data.isBindPhone){
+                            startGame();
+                       }else{
+                            overlay('login-dialog');
+                       }
+                    },
+                    error: function(xhr, type){
+                      console.log(type)
+                    }
+                  })
+              
             },
             error: function(xhr, type){
               //console.log(type)
@@ -497,7 +516,7 @@ btGame.makePublisher(a);
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization",auth);
             },
-            data: { 'level': j.level,'title':j.title,'userId':Number(37),'time':a.time },
+            data: { 'level': j.level,'title':j.title,'userId':user_id,'time':a.time },
             dataType: 'json',
             timeout: 5000,
             success: function(data){
@@ -572,8 +591,79 @@ btGame.makePublisher(a);
             'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
         }
     });
+    $("#validate").click(btnCheck);
+    var code = $("#validateCode");
+    code.bind('input propertychange',function(){
+        if(code&&code.val().length>=4){
+            $("#loginOkBtn").css("background-color","#44bb44");
+            $("#loginOkBtn").bind('click',function(){
+                var code = $("#validateCode").val();
+                var requestId = sessionStorage.getItem('requestId');
+                var phone = $("#phone").val();
+                var userId = sessionStorage.getItem('user_id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://api.huanjiaohu.com/tools/validateVerification',
+                    beforeSend: function(request) {
+                        // request.setRequestHeader("Authorization",auth);
+                    },
+                    data: { phone,code,requestId,userId},
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function(data){
+                        overlay('login-dialog');
+                        if(data.data){
+                            startGame();
+                        }
+                    },
+                    error: function(xhr, type){
+                      console.log(type)
+                    }
+                  })
+            });
+        }
+    });
 }(a);
 
+ 
+ function btnCheck() {
+  var valBtn = $("#validate");
+  var phoneBtn = $("#phone");
+  var time = 59;
+  valBtn.css("background-color","#e9e9e9");
+  valBtn.attr("disabled", true);
+  var timer = setInterval(function() {
+   if (time == 0) {
+    clearInterval(timer);
+    valBtn.attr("disabled", false);
+    valBtn.val("获取验证码");
+    valBtn.css("background-color","#44bb44");
+   } else {
+    valBtn.val(time + "秒");
+    time--;
+   }
+  }, 1000);
+  if(phoneBtn.val()){
+    $.ajax({
+        type: 'POST',
+        url: 'https://api.huanjiaohu.com/tools/sendVerification',
+        beforeSend: function(request) {
+            // request.setRequestHeader("Authorization",auth);
+        },
+        data: { 'phone': phoneBtn.val()},
+        dataType: 'json',
+        timeout: 5000,
+        success: function(data){
+            sessionStorage.setItem('requestId',data.requestId);
+        },
+        error: function(xhr, type){
+          console.log(type)
+        }
+      })
+  }
+ 
+ }
 
 function overlay(id){
     var e1 = document.getElementById(id);
