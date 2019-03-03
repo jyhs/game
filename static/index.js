@@ -68,51 +68,51 @@ a.timer=null;
 btGame.makePublisher(a);
 
 
-~function(a) {
-    var _url = window.location.href;
-    var codeindex = _url.indexOf('code=');
-    var stateindex = _url.indexOf('&state');
-    var start = sessionStorage.getItem('start');
-    if(codeindex>0&&start){
-          var _code = _url.slice(codeindex+5,stateindex);
-          $.ajax({
-            type: 'POST',
-            url: 'https://api.huanjiaohu.com/user/loginByCode',
-            data: { code: _code },
-            dataType: 'json',
-            timeout: 5000,
-            success: function(user){
-                sessionStorage.setItem('user_id',user.id);
-                sessionStorage.setItem('Authorization',user.token);
-                $.ajax({
-                    type: 'POST',
-                    url: 'https://api.huanjiaohu.com/user/checkPhone',
-                    beforeSend: function(request) {
-                        request.setRequestHeader("Authorization",user.token);
-                    },
-                    data: {},
-                    dataType: 'json',
-                    timeout: 5000,
-                    success: function(data){
-                       if(data.isBindPhone){
-                            startGame();
-                       }else{
-                            overlay('login-dialog');
-                       }
-                    },
-                    error: function(xhr, type){
-                      console.log(type)
-                    }
-                  })
+// ~function(a) {
+//     var _url = window.location.href;
+//     var codeindex = _url.indexOf('code=');
+//     var stateindex = _url.indexOf('&state');
+//     if(codeindex>0&&start){
+//           var _code = _url.slice(codeindex+5,stateindex);
+//           $.ajax({
+//             type: 'POST',
+//             url: 'https://api.huanjiaohu.com/user/loginByCode',
+//             data: { code: _code },
+//             dataType: 'json',
+//             timeout: 5000,
+//             success: function(user){
+//                 sessionStorage.setItem('user_id',user.id);
+//                 sessionStorage.setItem('Authorization',user.token);
+
+//                 $.ajax({
+//                     type: 'POST',
+//                     url: 'https://api.huanjiaohu.com/user/checkPhone',
+//                     beforeSend: function(request) {
+//                         request.setRequestHeader("Authorization",user.token);
+//                     },
+//                     data: {},
+//                     dataType: 'json',
+//                     timeout: 5000,
+//                     success: function(data){
+//                        if(data.isBindPhone){
+//                             startGame();
+//                        }else{
+//                             overlay('login-dialog');
+//                        }
+//                     },
+//                     error: function(xhr, type){
+//                       console.log(type)
+//                     }
+//                   })
               
-            },
-            error: function(xhr, type){
-              //console.log(type)
-            }
-          })
+//             },
+//             error: function(xhr, type){
+//               //console.log(type)
+//             }
+//           })
     
-    }
-    }(a);
+//     }
+//     }(a);
 
 ~function(a) {
     a.load = [];
@@ -191,11 +191,24 @@ btGame.makePublisher(a);
 ~function(a) {
     var d = $("#start");
     d.on("click", ".guessPic", function(e) {
-        sessionStorage.setItem('start','start');
-        window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6edb9c7695fb8375&redirect_uri=https://game.huanjiaohu.com&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+        var urls = window.location.href.split('?');
+        var id = urls[1].split("&")[0].split('=')[1];
+        var token = urls[1].split("&")[1].split('=')[1]
+        if(Number(id)>0){
+            sessionStorage.setItem('user_id',id);
+            sessionStorage.setItem('Authorization',token);
+            startGame();
+        }else{
+            wx.miniProgram.redirectTo({
+                url:'/pages/login/main'
+            })
+        }
+
     });
     d.on("click", ".guessNam", function(e) {
-        window.location.href='https://group.huanjiaohu.com';
+        wx.miniProgram.switchTab({
+            url:'/pages/encyclopedia/main'
+        })
     });
     d.on("click", ".rule", function(e) {
         overlay('rule-dialog');
@@ -709,7 +722,6 @@ function startGame(){
                 }
                 
                 if(g==29){
-                    sessionStorage.removeItem('start');
                     a.setPlayMode($(this).index() - 1);
                     a.fire("pageChange", 1);
                     a.fire("gameStart");
