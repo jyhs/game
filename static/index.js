@@ -216,7 +216,7 @@ btGame.makePublisher(a);
     d.on("click", ".ranking", function(e) {
         $.ajax({
             type: 'POST',
-            url: 'https://api.huanjiaohu.com/game/list',
+            url: 'https://api.huanjiaohu.com/game/player/list',
             dataType: 'json',
             timeout: 5000,
             success: function(datas){
@@ -525,7 +525,7 @@ btGame.makePublisher(a);
         var auth = sessionStorage.getItem('Authorization');
         $.ajax({
             type: 'POST',
-            url: 'https://api.huanjiaohu.com/game/over',
+            url: 'https://api.huanjiaohu.com/game/player/over',
             beforeSend: function(request) {
                 request.setRequestHeader("Authorization",auth);
             },
