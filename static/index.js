@@ -533,20 +533,22 @@ btGame.makePublisher(a);
             dataType: 'json',
             timeout: 5000,
             success: function(data){
+                a.time=0;
             },
             error: function(xhr, type){
               console.log(type)
             }
           })
-        wx.miniProgram.postMessage({
-            data: {
-                'param': 'type=game',
-                "shareUserId":user_id,
-                'auth':auth,
-                'title': document.title,
-                'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
-            }
-        });
+          a.time=0;
+        // wx.miniProgram.postMessage({
+        //     data: {
+        //         'param': 'type=game',
+        //         "shareUserId":user_id,
+        //         'auth':auth,
+        //         'title': document.title,
+        //         'imageUrl': 'https://static.huanjiaohu.com/image/share/game.jpg?r='+Math.random()
+        //     }
+        // });
     });
  
 }(a);
